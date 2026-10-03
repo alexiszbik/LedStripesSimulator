@@ -2,29 +2,28 @@
 
 #include <RtMidi.h>
 
+#include <functional>
 #include <memory>
 #include <string>
+#include <vector>
 
 class MidiInputHandler
 {
 public:
-    explicit MidiInputHandler(std::string virtualPortName);
+    using MessageCallback = std::function<void(std::vector<unsigned char>)>;
+
+    MidiInputHandler(std::string virtualPortName, MessageCallback callback);
     ~MidiInputHandler();
 
     MidiInputHandler(const MidiInputHandler&) = delete;
     MidiInputHandler& operator=(const MidiInputHandler&) = delete;
-
-    void run();
 
 private:
     static void onMidiMessage(double /*deltaTime*/,
                               std::vector<unsigned char>* message,
                               void* userData);
 
-    void handleMessage(const std::vector<unsigned char>& message) const;
-    static void logNoteOn(int note, int velocity);
-    static void logNoteOff(int note);
-
     std::string virtualPortName_;
+    MessageCallback callback_;
     std::unique_ptr<RtMidiIn> midiIn_;
 };

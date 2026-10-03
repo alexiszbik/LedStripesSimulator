@@ -1,19 +1,18 @@
-#include "MidiInputHandler.h"
+#include "Application.h"
 
+#include <exception>
 #include <iostream>
 
 int main()
 {
     try
     {
-        MidiInputHandler handler("LedStripes");
-        handler.run();
+        Application app("LedStripes");
+        return app.run();
     }
     catch (const std::exception& ex)
     {
         std::cerr << "Error: " << ex.what() << '\n';
         return 1;
     }
-
-    return 0;
 }
